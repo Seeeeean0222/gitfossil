@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitfossil"
+version = "0.1.0"
+description = "Turn a Git repository's history into an interactive engineering risk map."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "GitFossil contributors" }]
+keywords = ["git", "repository-analysis", "software-engineering", "visualization", "bus-factor"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Software Development :: Quality Assurance",
+  "Topic :: Software Development :: Version Control :: Git",
+]
+
+[project.scripts]
+gitfossil = "gitfossil.cli:main"
+
+[project.urls]
+Homepage = "https://Seeeeean0222.github.io/gitfossil/"
+Repository = "https://github.com/Seeeeean0222/gitfossil"
+Issues = "https://github.com/Seeeeean0222/gitfossil/issues"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+gitfossil = ["template.html"]
+
+[tool.coverage.run]
+branch = true
+source = ["gitfossil"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

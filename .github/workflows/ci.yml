@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Python ${{ matrix.python }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.9", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install
+        run: python -m pip install -e .
+
+      - name: Test
+        run: python -m unittest discover -s tests -t . -v
+
+      - name: Verify generated demo is current
+        if: matrix.python == '3.12'
+        run: |
+          python scripts/build_demo.py
+          git diff --exit-code -- docs/index.html
+
+      - name: Smoke-test the CLI on this repository
+        if: matrix.python == '3.12'
+        run: gitfossil scan . -o report.html --json report.json --quiet
+
+      - name: Upload demo report
+        if: matrix.python == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitfossil-report
+          path: |
+            report.html
+            report.json
+          retention-days: 14
